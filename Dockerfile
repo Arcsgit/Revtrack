@@ -2,7 +2,7 @@
 FROM node:18-alpine AS base
 
 # Install Python and build dependencies
-RUN apk add --no-cache python3 py3-pip python3-dev build-base
+RUN apk add --no-cache python3 py3-pip python3-dev build-base py3-virtualenv
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -14,12 +14,14 @@ COPY Backend/package*.json ./Backend/
 RUN npm ci
 RUN cd Backend && npm ci
 
-# Install Python dependencies
+# Create Python virtual environment and install dependencies
 COPY requirements.txt ./
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Install Playwright browsers
-RUN npx playwright install --with-deps chromium
+RUN playwright install --with-deps chromium
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -38,8 +40,13 @@ WORKDIR /app
 ENV NODE_ENV production
 
 # Install Python and runtime dependencies
-RUN apk add --no-cache python3 py3-pip
-COPY --from=deps /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+RUN apk add --no-cache python3 py3-pip py3-virtualenv
+
+# Copy virtual environment
+COPY --from=deps /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Copy Playwright browsers
 COPY --from=deps /root/.cache/ms-playwright /root/.cache/ms-playwright
 
 RUN addgroup --system --gid 1001 nodejs

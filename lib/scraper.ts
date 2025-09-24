@@ -1,5 +1,6 @@
 import { spawn } from "child_process";
 import path from "path";
+import { getPythonPath } from './python-utils';
 
 export interface ProductData {
   title: string;
@@ -36,7 +37,7 @@ const runPythonScript = async (scriptPath: string, arg: string, maxRetries: numb
 
         // Use an absolute path to prevent issues with the current working directory
         const absoluteScriptPath = path.join(process.cwd(), scriptPath);
-        const pythonPath = path.join(process.cwd(), '.venv', 'bin', 'python');
+        const pythonPath = getPythonPath();
         const pythonProcess = spawn(pythonPath, [absoluteScriptPath, arg]);
         let data = "";
         let errorData = "";

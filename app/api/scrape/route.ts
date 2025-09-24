@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { spawn } from 'child_process';
 import path from 'path';
+import { getPythonPath } from '@/lib/python-utils';
 
 // Retry configuration
 const MAX_RETRIES = 3;
@@ -21,7 +22,7 @@ async function runPythonScriptWithRetry(scriptName: string, url: string, maxRetr
       return await new Promise<any>((resolve, reject) => {
         console.log(`Attempting to run ${scriptName}, attempt ${attempt + 1}/${maxRetries + 1}`);
 
-        const pythonPath = path.join(process.cwd(), '.venv', 'bin', 'python');
+        const pythonPath = getPythonPath();
         const childProcess = spawn(pythonPath, [`scripts/${scriptName}`, url]);
         let data = '';
         let error = '';

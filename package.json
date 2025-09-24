@@ -4,7 +4,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "install-python": "apt-get update && apt-get install -y python3"
+    "railway:build": "npm run build",
+    "railway:start": "npm start",
+    "test:python": "python test_setup.py"
   },
   "dependencies": {
     "@ai-sdk/google": "^1.0.4",
