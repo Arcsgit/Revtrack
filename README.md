@@ -44,8 +44,7 @@ RevTrack is a comprehensive Next.js application that analyzes Amazon products by
 
 1. **Clone the repository**
    ```bash
-   cd /path/to/your/project
-   # Your project is already here at /Users/archit/Downloads/REVTRACK/Frontend
+   cd /path/to/your/project/Revtrack
    ```
 
 2. **Install Node.js dependencies**
@@ -53,7 +52,7 @@ RevTrack is a comprehensive Next.js application that analyzes Amazon products by
    npm install
    ```
 
-3. **Set up Python virtual environment** (Already done)
+3. **Set up Python virtual environment**
    ```bash
    python3 -m venv .venv
    source .venv/bin/activate
